@@ -10,7 +10,7 @@ def home(request):
     return render(request, 'events/home.html')
 
 def user_register(request):
-    """Handle user registration."""
+    """Handle user registration by accepting username and password."""
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -27,7 +27,7 @@ def user_register(request):
     return render(request, 'events/register.html')
 
 def user_login(request):
-    """Handle user login."""
+    """Authenticate and log in the user."""
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -40,19 +40,19 @@ def user_login(request):
     return render(request, 'events/login.html')
 
 def user_logout(request):
-    """Handle user logout."""
+    """Log out the user and redirect to home."""
     logout(request)
     return redirect('events:home')
 
 @login_required
 def dashboard(request):
-    """Display all events."""
+    """Display all events associated with the logged-in user."""
     events = Event.objects.filter(organizer=request.user)
     return render(request, 'events/dashboard.html', {'events': events})
 
 @login_required
 def create_event(request):
-    """Create a new event."""
+    """Create a new event and save it to the database."""
     if request.method == 'POST':
         title = request.POST['title']
         description = request.POST['description']
@@ -73,7 +73,7 @@ def create_event(request):
 
 @login_required
 def edit_event(request, pk):
-    """Edit an event."""
+    """Edit an existing event with the specified primary key (pk)."""
     event = get_object_or_404(Event, pk=pk)
     if request.method == 'POST':
         event.title = request.POST['title']
@@ -88,7 +88,7 @@ def edit_event(request, pk):
 
 @login_required
 def delete_event(request, pk):
-    """Delete an event."""
+    """Delete an event based on the primary key (pk)."""
     event = get_object_or_404(Event, pk=pk)
     event.delete()
     messages.success(request, "Event deleted successfully!")
